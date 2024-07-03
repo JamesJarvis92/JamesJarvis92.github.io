@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Projectile Motion</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a href="task1.html">
+    <button>Click Me!</button>
+  </a>
+    <h1>Interactive Projectile Motion</h1>
+    <label for="velocity">Velocity:</label>
+    <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
+    <span id="velocityValue">50</span> m/s
+    <br><br>
+    <label for="angle">Angle:</label>
+    <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
+    <span id="angleValue">45</span> degrees
+    <br><br>
+    <label for="gravity">G:</label>
+    <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
+    <span id="gravityValue">9.81</span> N/kg
+    <br><br>
+    <label for="height">Start height:</label>
+    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
+    <span id="heightValue">100</span> m
+    <div id="graph"></div>
+    <script type="text/javascript">
+        async function loadPyodideAndPackages() {
+            window.pyodide = await loadPyodide();
+            await pyodide.loadPackage("numpy");
+            await pyodide.loadPackage("matplotlib");
+            await pyodide.runPythonAsync(`
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+
+def proj_motion(vel,angle,grav_strength,start_height,time_interval):
+    angle = np.radians(angle)
+    y_coords = []
+    x_coords = []
+    x_vel = vel * np.cos(angle)
+    y_vel = vel * np.sin(angle)
+    x_pos = 0
+    y_pos = start_height
+    landed = False
+    while not landed:
+        y_pos += y_vel * time_interval
+        y_vel += -1 * grav_strength * time_interval
+        x_pos += x_vel * time_interval
+        if y_pos <= 0:
+            landed = True
+        y_coords.append(y_pos)
+        x_coords.append(x_pos)
+    return x_coords, y_coords
+
+def plot_graph1(velocity,angle,g,h):
+    fig, ax = plt.subplots()
+    x, y = proj_motion(velocity, angle, g, h, 0.01)
+    ax.plot(x, y)
+    ax.set(xlabel='x/m', ylabel='y/m', title='Projectile Motion')
+    ax.grid()
+    plt.xlim(0,1000)
+    plt.ylim(0,500)
+
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
+`);
+        }
+
+        async function updateGraph() {
+            const velocity = document.getElementById('velocity').value;
+            document.getElementById('velocityValue').innerText = velocity;
+            const angle = document.getElementById('angle').value;
+            document.getElementById('angleValue').innerText = angle;
+            const gravity = document.getElementById('gravity').value;
+            document.getElementById('gravityValue').innerText = gravity;
+            const height = document.getElementById('height').value;
+            document.getElementById('heightValue').innerText = height;
+            const svg_data = await pyodide.runPythonAsync(`
+velocity = ${velocity}
+angle = ${angle}
+gravity = ${gravity}
+h = ${height}
+plot_graph1(velocity,angle,gravity,h)
+`);
+            document.getElementById('graph').innerHTML = svg_data;
+        }
+
+        loadPyodideAndPackages().then(() => {
+            updateGraph();
+        });
+    </script>
+    <p>This graph shows a drag-free projectile using time step calculations.</p>
+</body>
+</html>
