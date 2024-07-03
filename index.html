@@ -94,6 +94,7 @@
   </body>
 </html>
 -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -108,6 +109,9 @@
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
     <br><br>
+    <label for="angle">Angle:</label>
+    <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
+    <span id="angleValue">50</span> m/s
     <div id="graph"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
@@ -138,12 +142,14 @@ def proj_motion(vel,angle,grav_strength,start_height,time_interval):
         x_coords.append(x_pos)
     return x_coords, y_coords
 
-def plot_graph(velocity):
+def plot_graph(velocity,angle):
     fig, ax = plt.subplots()
-    x, y = proj_motion(velocity, 30, 9.81, 0, 0.01)
+    x, y = proj_motion(velocity, angle, 9.81, 0, 0.01)
     ax.plot(x, y)
     ax.set(xlabel='x/m', ylabel='y/m', title='Projectile Motion')
     ax.grid()
+    plt.xlim(0,1000)
+    plt.ylim(0,300)
 
     # Convert plot to SVG
     img_data = io.StringIO()
@@ -157,10 +163,13 @@ def plot_graph(velocity):
 
         async function updateGraph() {
             const velocity = document.getElementById('velocity').value;
+            const angle = document.getElementById('angle').value;
             document.getElementById('velocityValue').innerText = velocity;
+            document.getElementById('angleValue').innerText = angle;
             const svg_data = await pyodide.runPythonAsync(`
 velocity = ${velocity}
-plot_graph(velocity)
+angle = ${angle}
+plot_graph(velocity,angle)
 `);
             document.getElementById('graph').innerHTML = svg_data;
         }
