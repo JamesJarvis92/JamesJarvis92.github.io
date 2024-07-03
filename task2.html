@@ -112,6 +112,7 @@ def plot_graph2(velocity,angle,gravity,h):
     plt.annotate(values,xy = (500,250))
     ax.set(xlabel='x/m', ylabel='y/m', title='Analytic Projectile Motion')
     
+    
     # Convert plot to SVG
     img_data = io.StringIO()
     fig.savefig(img_data, format='svg')
