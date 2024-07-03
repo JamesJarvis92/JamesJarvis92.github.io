@@ -47,19 +47,19 @@
     
   <h1>Task2....</h1>
     <label for="velocity">Velocity:</label>
-    <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
+    <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph2()">
     <span id="velocityValue">50</span> m/s
     <br><br>
     <label for="angle">Angle:</label>
-    <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
+    <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph2()">
     <span id="angleValue">45</span> degrees
     <br><br>
     <label for="gravity">G:</label>
-    <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
+    <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph2()">
     <span id="gravityValue">9.81</span> N/kg
     <br><br>
     <label for="height">Start height:</label>
-    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
+    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph2()">
     <span id="heightValue">100</span> m
     <div id="graph"></div>
     <script type="text/javascript">
@@ -68,6 +68,7 @@
             await pyodide.loadPackage("numpy");
             await pyodide.loadPackage("matplotlib");
             await pyodide.runPythonAsync(`
+
 import matplotlib.pyplot as plt
 import numpy as np
 import io
@@ -123,7 +124,7 @@ def plot_graph2(velocity,angle,gravity,h):
 `);
         }
 
-        async function updateGraph() {
+        async function updateGraph2() {
             const velocity = document.getElementById('velocity').value;
             document.getElementById('velocityValue').innerText = velocity;
             const angle = document.getElementById('angle').value;
@@ -143,7 +144,7 @@ plot_graph2(velocity,angle,gravity,h)
         }
 
         loadPyodideAndPackages().then(() => {
-            updateGraph();
+            updateGraph2();
         });
     </script>
 </body>
