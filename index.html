@@ -112,6 +112,14 @@
     <label for="angle">Angle:</label>
     <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
     <span id="angleValue">50</span> m/s
+    <br><br>
+    <label for="gravity">G:</label>
+    <input type="range" id="gravity" min="0" max="20" value="9.81" oninput="updateGraph()">
+    <span id="gravityValue">50</span> m/s
+    <br><br>
+    <label for="height">Start height:</label>
+    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
+    <span id="heightValue">50</span> m/s
     <div id="graph"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
@@ -142,14 +150,14 @@ def proj_motion(vel,angle,grav_strength,start_height,time_interval):
         x_coords.append(x_pos)
     return x_coords, y_coords
 
-def plot_graph(velocity,angle):
+def plot_graph(velocity,angle,g,h):
     fig, ax = plt.subplots()
-    x, y = proj_motion(velocity, angle, 9.81, 0, 0.01)
+    x, y = proj_motion(velocity, angle, g, h, 0.01)
     ax.plot(x, y)
     ax.set(xlabel='x/m', ylabel='y/m', title='Projectile Motion')
     ax.grid()
     plt.xlim(0,1000)
-    plt.ylim(0,300)
+    plt.ylim(0,500)
 
     # Convert plot to SVG
     img_data = io.StringIO()
@@ -166,10 +174,16 @@ def plot_graph(velocity,angle):
             const angle = document.getElementById('angle').value;
             document.getElementById('velocityValue').innerText = velocity;
             document.getElementById('angleValue').innerText = angle;
+            const gravity = document.getElementById('gravity').value;
+            const height = document.getElementById('height').value;
+            document.getElementById('gravityValue').innerText = gravity;
+            document.getElementById('heightValue').innerText = height;
             const svg_data = await pyodide.runPythonAsync(`
 velocity = ${velocity}
 angle = ${angle}
-plot_graph(velocity,angle)
+gravity = ${gravity}
+h = ${height}
+plot_graph(velocity,angle,gravity,h)
 `);
             document.getElementById('graph').innerHTML = svg_data;
         }
