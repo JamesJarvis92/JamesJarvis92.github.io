@@ -93,12 +93,12 @@ def plot_graph1(velocity,angle,g,h):
 
         async function updateGraph() {
             const velocity = document.getElementById('velocity').value;
-            const angle = document.getElementById('angle').value;
             document.getElementById('velocityValue').innerText = velocity;
+            const angle = document.getElementById('angle').value;
             document.getElementById('angleValue').innerText = angle;
             const gravity = document.getElementById('gravity').value;
-            const height = document.getElementById('height').value;
             document.getElementById('gravityValue').innerText = gravity;
+            const height = document.getElementById('height').value;
             document.getElementById('heightValue').innerText = height;
             const svg_data = await pyodide.runPythonAsync(`
 velocity = ${velocity}
