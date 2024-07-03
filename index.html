@@ -150,7 +150,7 @@ def proj_motion(vel,angle,grav_strength,start_height,time_interval):
         x_coords.append(x_pos)
     return x_coords, y_coords
 
-def plot_graph(velocity,angle,g,h):
+def plot_graph1(velocity,angle,g,h):
     fig, ax = plt.subplots()
     x, y = proj_motion(velocity, angle, g, h, 0.01)
     ax.plot(x, y)
@@ -183,7 +183,7 @@ velocity = ${velocity}
 angle = ${angle}
 gravity = ${gravity}
 h = ${height}
-plot_graph(velocity,angle,gravity,h)
+plot_graph1(velocity,angle,gravity,h)
 `);
             document.getElementById('graph').innerHTML = svg_data;
         }
