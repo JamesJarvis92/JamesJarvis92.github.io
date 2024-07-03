@@ -72,7 +72,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import io
 
-def analytic_proj_motion(vel,g,start_height,angle):
+def analytic_proj_motion(vel,gravity,start_height,angle):
     angle = np.radians(angle)
     st_part_R = (vel**2)/g
     sqrt_part_R = ((np.sin(angle))**2)+((2*g*start_height)/(vel**2))
@@ -92,16 +92,16 @@ def analytic_proj_motion(vel,g,start_height,angle):
     return x_val, y_val, R, flight_time
 
 
-def apogee(vel,g,start_height,angle):
+def apogee(vel,gravity,start_height,angle):
     angle = np.radians(angle)
     x_apogee = ((vel**2)/g)*np.sin(angle)*np.cos(angle)
     y_apogee = ((vel*vel)/(2*g))*np.sin(angle)*np.sin(angle)+start_height
     return x_apogee,y_apogee
 
-def plot_graph1(velocity,angle,g,h):
+def plot_graph2(velocity,angle,gravity,h):
     fig, ax = plt.subplots()
-    x, y, R, t = analytic_proj_motion(vel,g,h,angle)
-    apx, apy = apogee(vel,g,h,angle)
+    x, y, R, t = analytic_proj_motion(vel,gravity,h,angle)
+    apx, apy = apogee(vel,gravity,h,angle)
     plt.plot(apx,apy, 'y*', markersize=16, label='apogee')
     plt.plot(x,y,label = "flight")
     plt.legend()
@@ -137,7 +137,7 @@ velocity = ${velocity}
 angle = ${angle}
 gravity = ${gravity}
 h = ${height}
-plot_graph1(velocity,angle,gravity,h)
+plot_graph2(velocity,angle,gravity,h)
 `);
             document.getElementById('graph').innerHTML = svg_data;
         }
