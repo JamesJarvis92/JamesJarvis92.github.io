@@ -111,15 +111,15 @@
     <br><br>
     <label for="angle">Angle:</label>
     <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
-    <span id="angleValue">50</span> m/s
+    <span id="angleValue">45</span> degrees
     <br><br>
     <label for="gravity">G:</label>
     <input type="range" id="gravity" min="0" max="20" value="9.81" oninput="updateGraph()">
-    <span id="gravityValue">50</span> m/s
+    <span id="gravityValue">9.81</span> N/kg
     <br><br>
     <label for="height">Start height:</label>
     <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
-    <span id="heightValue">50</span> m/s
+    <span id="heightValue">100</span> m
     <div id="graph"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
