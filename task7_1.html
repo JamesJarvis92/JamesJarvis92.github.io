@@ -116,7 +116,7 @@ def plot_graph7_1(angle1,angle2,angle3,angle4,angle5,angle6):
     x_val78,y_val78,R,T78 = neg_proj_motion(vel,g,start_height,angle5)
     x_val85,y_val85,R,T85 = neg_proj_motion(vel,g,start_height,angle6)
     values = "Vel = " + str(vel) +" H = " + str(start_height) + " G = " + str(g) 
-    plt.annotate(values,xy = (15,4))
+    plt.annotate(values,xy = (6,5))
     plt.plot(x_val30,y_val30,label = "angle1")
     plt.plot(x_val45,y_val45,label = "angle2")
     plt.plot(x_val60,y_val60,label = "angle3")
