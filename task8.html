@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 8...</h1>
+  <h1>Task 8....</h1>
   <label for="angle">Angle:</label>
   <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
   <span id="angleValue">45</span> degrees
@@ -107,7 +107,7 @@ def bounce_ball_analytic(vel,C,angle,h,g):
     try:
         for i in range(N):
             angle = np.degrees(angle)
-            x, y, range, t = analytic_proj_motion(vel,g,h,angle)
+            x, y, R, t = analytic_proj_motion(vel,g,h,angle)
             h = 0
             angle = np.radians(angle)
             x = [x+rang for x in x]
@@ -121,7 +121,7 @@ def bounce_ball_analytic(vel,C,angle,h,g):
             vel = new_vel
             x_val+=x
             y_val+=y
-            rang += range
+            rang += R
     except:
         pass
     return x_val,y_val
@@ -136,7 +136,6 @@ def plot_graph8(vel,C,g,angle,h):
     plt.title("Bouncy ball with coeffecient of restitution C")
     plt.xlabel("x/m")
     plt.ylabel("y/m")
-    plt.show()
     
     # Convert plot to SVG
     img_data = io.StringIO()
