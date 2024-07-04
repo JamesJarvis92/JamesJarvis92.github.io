@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 4</h1>
+  <h1>Task 5</h1>
     <label for="velocity">Velocity:</label>
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
@@ -165,14 +165,14 @@ def plot_graph5(g,X,Y,start_height,vel,angle):
             document.getElementById('velocityValue').innerText = velocity;
             const angle = document.getElementById('angle').value;
             document.getElementById('angleValue').innerText = angle;
-            const X = document.getElementById('X').value;
-            document.getElementById('XValue').innerText = X;
-            const Y = document.getElementById('Y').value;
-            document.getElementById('YValue').innerText = Y;
             const gravity = document.getElementById('gravity').value;
             document.getElementById('gravityValue').innerText = gravity;
             const height = document.getElementById('height').value;
             document.getElementById('heightValue').innerText = height;
+            const X = document.getElementById('X').value;
+            document.getElementById('XValue').innerText = X;
+            const Y = document.getElementById('Y').value;
+            document.getElementById('YValue').innerText = Y;
             const svg_data = await pyodide.runPythonAsync(`
 velocity = ${velocity}
 angle = ${angle}
