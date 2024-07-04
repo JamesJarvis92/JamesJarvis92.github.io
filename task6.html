@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 6</h1>
+  <h1>Task 6.</h1>
     <label for="velocity">Velocity:</label>
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
@@ -124,7 +124,7 @@ def analytic_curve_length(vel,g,angle,h):
 def plot_graph6(velocity,angle,gravity,h):
     fig, ax = plt.subplots()
     x, y, R, t = analytic_proj_motion(velocity,gravity,h,angle)
-    an_clen = analytic_curve_length(velocity,gravit,angle,h)
+    an_clen = analytic_curve_length(velocity,gravity,angle,h)
     ap_clen = curve_length_approx(x,y)
     anvalues = "Exact curve length: " + str(an_clen.round(2)) + "m"
     appvalues = "Approximate curve length: " + str(ap_len.round(2)) + "m" 
