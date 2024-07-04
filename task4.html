@@ -44,6 +44,106 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-    
+  <h1>Task 4</h1>
+    <label for="velocity">Velocity:</label>
+    <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
+    <span id="velocityValue">50</span> m/s
+    <br><br>
+    <label for="angle">Angle:</label>
+    <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
+    <span id="angleValue">45</span> degrees
+    <br><br>
+    <label for="gravity">G:</label>
+    <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
+    <span id="gravityValue">9.81</span> N/kg
+    <br><br>
+    <label for="height">Start height:</label>
+    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
+    <span id="heightValue">100</span> m
+  <div id="graph"></div>
+    <script type="text/javascript">
+        async function loadPyodideAndPackages() {
+            window.pyodide = await loadPyodide();
+            await pyodide.loadPackage("numpy");
+            await pyodide.loadPackage("matplotlib");
+            await pyodide.runPythonAsync(`
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+
+def analytic_proj_motion(vel,g,start_height,angle):
+    angle = np.radians(angle)
+    st_part_R = (vel**2)/g
+    sqrt_part_R = ((np.sin(angle))**2)+((2*g*start_height)/(vel**2))
+    sc_part_R = np.sin(angle)*np.cos(angle)
+    R = st_part_R*(sc_part_R + np.cos(angle)*np.sqrt(sqrt_part_R))
+    x_val = np.arange(start = 0,stop = R, step = 0.1)     ### may need to change step based on size of R
+    x_val = list(x_val)
+    y_val = []
+    for i in range(len(x_val)):
+        x = x_val[i]
+        y_first = start_height + (x*np.tan(angle))
+        z = g/(2*(vel**2))
+        y_second = z*(1+(np.tan(angle)**2))*(x**2)
+        y = y_first - y_second
+        y_val.append(y)
+    flight_time = R/(vel*np.cos(angle))
+    return x_val, y_val, R, flight_time
+
+def optimum_angle(vel,angle,start_height,g):
+    x_org, y_org, R_org, t_org = analytic_proj_motion(vel,g,start_height,angle)
+    amaxp1 = 2+((2*g*start_height)/(vel**2))
+    amax = np.arcsin(1/(np.sqrt(amaxp1)))
+    amax = np.degrees(amax)
+    x_opt, y_opt, R_opt, t_opt = analytic_proj_motion(vel,g,start_height,amax)
+    return x_org, y_org, x_opt, y_opt,amax
+
+def plot_graph4(vel,angle,start_height,g):
+    fig, ax = plt.subplots()
+    x_org, y_org, x_opt, y_opt, a_max = optimum_angle(vel,angle,start_height,g)
+    plt.plot(x_org,y_org, color = "black", label = "Original flight")
+    plt.plot(x_opt,y_opt, color = "blue", label = "Max R")
+    plt.ylim(0)
+    plt.xlim(0)
+    plt.legend()
+    values = "\nAngle of optimum range = "+ str(a_max.round(2))
+    plt.annotate(values,xy = (3.5,2))
+    plt.title("Normal trajectory vs max range trajectory")
+    plt.xlabel("x/m")
+    plt.ylabel("y/m")
+
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
+`);
+        }
+
+        async function updateGraph() {
+            const velocity = document.getElementById('velocity').value;
+            document.getElementById('velocityValue').innerText = velocity;
+            const angle = document.getElementById('angle').value;
+            document.getElementById('angleValue').innerText = angle;
+            const gravity = document.getElementById('gravity').value;
+            document.getElementById('gravityValue').innerText = gravity;
+            const height = document.getElementById('height').value;
+            document.getElementById('heightValue').innerText = height;
+            const svg_data = await pyodide.runPythonAsync(`
+velocity = ${velocity}
+angle = ${angle}
+gravity = ${gravity}
+h = ${height}
+plot_graph4(velocity,angle,h,gravity)
+`);
+            document.getElementById('graph').innerHTML = svg_data;
+        }
+
+        loadPyodideAndPackages().then(() => {
+            updateGraph();
+        });
+    </script>
 </body>
 </html>
