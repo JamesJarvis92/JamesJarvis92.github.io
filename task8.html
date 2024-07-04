@@ -129,14 +129,15 @@ def bounce_ball_analytic(vel,C,angle,h,g):
 
 
 def plot_graph8(vel,C,g,angle,h):
-    x, y = bounce_ball_analytic(vel,C,angle,h,g,N)
+    x, y = bounce_ball_analytic(vel,C,angle,h,g)
     plt.plot(x,y)
     plt.xlim(0)
     plt.ylim(0)
     plt.title("Bouncy ball with coeffecient of restitution C")
     plt.xlabel("x/m")
     plt.ylabel("y/m")
-
+    plt.show()
+    
     # Convert plot to SVG
     img_data = io.StringIO()
     fig.savefig(img_data, format='svg')
