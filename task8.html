@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 8</h1>
+  <h1>Task 8.</h1>
   <label for="angle">Angle:</label>
   <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
   <span id="angleValue">45</span> degrees
@@ -129,6 +129,7 @@ def bounce_ball_analytic(vel,C,angle,h,g):
 
 
 def plot_graph8(vel,C,g,angle,h):
+    fig, ax = plt.subplots()
     x, y = bounce_ball_analytic(vel,C,angle,h,g)
     plt.plot(x,y)
     plt.xlim(0)
@@ -137,7 +138,7 @@ def plot_graph8(vel,C,g,angle,h):
     plt.xlabel("x/m")
     plt.ylabel("y/m")
     plt.show()
-    
+
     # Convert plot to SVG
     img_data = io.StringIO()
     fig.savefig(img_data, format='svg')
