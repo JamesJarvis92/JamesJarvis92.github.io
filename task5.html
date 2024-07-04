@@ -44,6 +44,150 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-    
+  <h1>Task 4</h1>
+    <label for="velocity">Velocity:</label>
+    <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
+    <span id="velocityValue">50</span> m/s
+    <br><br>
+    <label for="angle">Angle:</label>
+    <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
+    <span id="angleValue">45</span> degrees
+    <br><br>
+    <label for="gravity">G:</label>
+    <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
+    <span id="gravityValue">9.81</span> N/kg
+    <br><br>
+    <label for="height">Start height:</label>
+    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
+    <span id="heightValue">100</span> m
+    <br><br>
+    <label for="X">X:</label>
+    <input type="range" id="X" min="0" max="1000" value="500" oninput="updateGraph()">
+    <span id="XValue">100</span> m
+    <br><br>
+    <label for="Y">Y:</label>
+    <input type="range" id="Y" min="0" max="200" value="100" oninput="updateGraph()">
+    <span id="heightValue">100</span> m
+  <div id="graph"></div>
+    <script type="text/javascript">
+        async function loadPyodideAndPackages() {
+            window.pyodide = await loadPyodide();
+            await pyodide.loadPackage("numpy");
+            await pyodide.loadPackage("matplotlib");
+            await pyodide.runPythonAsync(`
+import numpy as np
+import matplotlib.pyplot as plt
+import io
+
+def low_high_ball(g,X,Y,start_height,vel): 
+    luY = Y-start_height
+    low_u = np.sqrt(g) * np.sqrt(luY+np.sqrt((X**2)+(luY**2)))
+    low_u_anglep1 = luY + np.sqrt((X**2)+(luY**2))
+    low_u_angle = np.degrees(np.arctan(low_u_anglep1/X))
+    low_u_x, low_u_y, low_u_R, low_u_time = analytic_proj_motion(low_u,g,start_height,low_u_angle)
+    a = (g/(2*(vel**2)))*(X**2)
+    b = (-1)*X
+    c = Y - start_height + ((g*(X**2))/(2*(vel**2)))
+    disc = (b**2)-(4*a*c)
+    postheta = np.degrees(np.arctan((-b+np.sqrt(disc))/(2*a)))
+    negtheta = np.degrees(np.arctan((-b-np.sqrt(disc))/(2*a)))
+    low_ball_x, low_ball_y, low_ball_R, low_ball_time = analytic_proj_motion(vel,g,start_height,negtheta)
+    high_ball_x, high_ball_y, high_ball_R, high_ball_time = analytic_proj_motion(vel,g,start_height,postheta)
+    return low_u_x, low_u_y, low_ball_x, low_ball_y, high_ball_x, high_ball_y
+
+def bounding_curve(x_val,vel,g,start_height):
+    y_val = []
+    vel2 = vel**2
+    for x in x_val:
+        yp1 = (vel2)/(2*g)
+        yp2 = (g/(2*vel2))*(x**2)
+        y = start_height + yp1 - yp2
+        y_val.append(y)
+    return x_val,y_val
+
+def analytic_proj_motion(vel,g,start_height,angle):
+    angle = np.radians(angle)
+    st_part_R = (vel**2)/g
+    sqrt_part_R = ((np.sin(angle))**2)+((2*g*start_height)/(vel**2))
+    sc_part_R = np.sin(angle)*np.cos(angle)
+    R = st_part_R*(sc_part_R + np.cos(angle)*np.sqrt(sqrt_part_R))
+    x_val = np.arange(start = 0,stop = R, step = 0.1)     
+    x_val = list(x_val)
+    y_val = []
+    for i in range(len(x_val)):
+        x = x_val[i]
+        y_first = start_height + (x*np.tan(angle))
+        z = g/(2*(vel**2))
+        y_second = z*(1+(np.tan(angle)**2))*(x**2)
+        y = y_first - y_second
+        y_val.append(y)
+    flight_time = R/(vel*np.cos(angle))
+    return x_val, y_val, R, flight_time
+
+def optimum_angle(vel,angle,start_height,g):
+    x_org, y_org, R_org, t_org = analytic_proj_motion(vel,g,start_height,angle)
+    amaxp1 = 2+((2*g*start_height)/(vel**2))
+    amax = np.arcsin(1/(np.sqrt(amaxp1)))
+    amax = np.degrees(amax)
+    x_opt, y_opt, R_opt, t_opt = analytic_proj_motion(vel,g,start_height,amax)
+    return x_org, y_org, x_opt, y_opt,amax
+
+def plot_graph5(g,X,Y,start_height,vel,angle):
+    fig, ax = plt.subplots()
+    lux,luy,lbx,lby,hbx,hby = low_high_ball(g,X,Y,start_height,vel)
+    x_org, y_org, x_opt, y_opt, a_max = optimum_angle(vel,angle,start_height,g)
+    xbc, ybc = bounding_curve(x_opt,vel,g,start_height)
+    plt.plot(lux,luy,label = "low_u")
+    plt.plot(lbx,lby,color = "black",label = "low_ball" )
+    plt.plot(hbx,hby,label = "high_ball")
+    plt.plot(x_opt,y_opt,color = "pink",label = "max_range")
+    plt.plot(xbc,ybc,"--", label = "bounding",color = "red")
+    plt.plot(X, Y, 'y*', markersize=16, label='X,Y (1000,300)')
+    plt.xlim(0)
+    plt.ylim(0)
+    plt.legend()
+    plt.title("Low/high ball, max range, minimum speed and bounding parabola")
+    plt.xlabel("x/m")
+    plt.ylabel("y/m")
+
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
+`);
+        }
+
+        async function updateGraph() {
+            const velocity = document.getElementById('velocity').value;
+            document.getElementById('velocityValue').innerText = velocity;
+            const angle = document.getElementById('angle').value;
+            document.getElementById('angleValue').innerText = angle;
+            const X = document.getElementById('X').value;
+            document.getElementById('XValue').innerText = X;
+            const Y = document.getElementById('Y').value;
+            document.getElementById('YValue').innerText = Y;
+            const gravity = document.getElementById('gravity').value;
+            document.getElementById('gravityValue').innerText = gravity;
+            const height = document.getElementById('height').value;
+            document.getElementById('heightValue').innerText = height;
+            const svg_data = await pyodide.runPythonAsync(`
+velocity = ${velocity}
+angle = ${angle}
+gravity = ${gravity}
+h = ${height}
+X = ${X}
+Y = ${Y}
+plot_graph5(gravity,X,Y,h,velocity,angle)
+`);
+            document.getElementById('graph').innerHTML = svg_data;
+        }
+
+        loadPyodideAndPackages().then(() => {
+            updateGraph();
+        });
+    </script>  
 </body>
 </html>
