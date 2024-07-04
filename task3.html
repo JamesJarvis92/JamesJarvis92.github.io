@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task3.........</h1>
+  <h1>Task3..........</h1>
     <label for="velocity">Velocity:</label>
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
@@ -92,7 +92,7 @@ def analytic_proj_motion(X,vel,g,start_height,angle):
         y = y_first - y_second
         y_val.append(y)
     flight_time = R/(vel*np.cos(angle))
-    return x_val[:-1], y_val, R, flight_time
+    return x_val, y_val, R, flight_time
 
 
 
@@ -126,9 +126,9 @@ def plot_graph3(g,X,Y,start_height,vel):
     #plt.plot(lux[:pos],luy[:pos],label = "low_u")
     #plt.plot(lbx[:pos],lby[:pos],color = "black",label = "low_ball" )
     #plt.plot(hbx[:pos],hby[:pos],label = "high_ball")
-    plt.plot(lux,luy,label = "low_u")
-    plt.plot(lbx,lby,color = "black",label = "low_ball" )
-    plt.plot(hbx,hby[:pos],label = "high_ball")
+    plt.plot(lux[:-1],luy,label = "low_u")
+    plt.plot(lbx[:-1],lby,color = "black",label = "low_ball" )
+    plt.plot(hbx[:-1],hby[:pos],label = "high_ball")
     plt.xlim(0,1200)
     plt.ylim(0,1500)
     plt.legend()
