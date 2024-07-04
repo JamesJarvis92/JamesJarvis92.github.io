@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task3.</h1>
+  <h1>Task3..</h1>
     <label for="velocity">Velocity:</label>
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
@@ -85,8 +85,7 @@ def analytic_proj_motion(vel,g,start_height,angle):
     x_val = np.arange(start = 0,stop = R, step = 0.1)     ### may need to change step based on size of R
     x_val = list(x_val)
     y_val = []
-    for i in range(len(x_val)):
-        x = x_val[i]
+    for x in x_val:
         y_first = start_height + (x*np.tan(angle))
         z = g/(2*(vel**2))
         y_second = z*(1+(np.tan(angle)**2))*(x**2)
