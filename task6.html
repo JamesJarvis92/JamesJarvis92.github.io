@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 6..</h1>
+  <h1>Task 6...</h1>
     <label for="velocity">Velocity:</label>
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
@@ -128,7 +128,6 @@ def plot_graph6(velocity,angle,gravity,h):
     ap_clen = curve_length_approx(x,y)
     anvalues = "Exact curve length: " + str(an_clen.round(2)) + "m"
     appvalues = "Approximate curve length: " + str(ap_clen.round(2)) + "m" 
-    # add range
     apx, apy = apogee(velocity,gravity,h,angle)
     ax.plot(apx,apy, 'y*', markersize=16, label='apogee')
     ax.plot(x,y,label = "flight")
@@ -136,7 +135,9 @@ def plot_graph6(velocity,angle,gravity,h):
     plt.xlim(0,1000)
     plt.ylim(0,500)
     values = "Range is " + str(R.round(2)) + "m Apogee at (" + str(apx.round(2)) + "," + str(apy.round(2)) + ")"
-    plt.annotate(values,xy = (250,350))
+    plt.annotate(values,xy = (200,470))
+    plt.annotate(anvalues, xy = (200,440))
+    plt.annotate(appvalues, xy = (200,410))
     ax.set(xlabel='x/m', ylabel='y/m', title='Analytic Projectile Motion')
     
     
