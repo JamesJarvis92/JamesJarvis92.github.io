@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Projectile Motion</title>
+    <title>Computational Challenge 2024</title>
     <script src="https://cdn.jsdelivr.net/pyodide/v0.21.3/full/pyodide.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 6</h1>
+  <h1>Task 7.1</h1>
   <label for="angle1">Angle 1:</label>
   <input type="range" id="angle1" min="0" max="90" value="45" oninput="updateGraph()">
   <span id="angle1Value">45</span> degrees
@@ -131,13 +131,13 @@ def plot_graph7_1(angle1,angle2,angle3,angle4,angle5,angle6):
     plt.ylabel("y/m")
   
   
-  # Convert plot to SVG
-  img_data = io.StringIO()
-  fig.savefig(img_data, format='svg')
-  img_data.seek(0)
-  svg_data = img_data.getvalue()
-  plt.close(fig)
-  return svg_data
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
 `);
       }
 
