@@ -58,12 +58,12 @@
     <span id="heightValue">150</span> m
     <br><br>
     <label for="X">X:</label>
-    <input type="range" id="X" min="0" max="1000" value="500" oninput="updateGraph()">
-    <span id="XValue">500</span> m
+    <input type="range" id="X" min="0" max="2500" value="1250" oninput="updateGraph()">
+    <span id="XValue">1250</span> m
     <br><br>
     <label for="Y">Y:</label>
-    <input type="range" id="Y" min="0" max="400" value="200" oninput="updateGraph()">
-    <span id="YValue">200</span> m
+    <input type="range" id="Y" min="0" max="1500" value="750" oninput="updateGraph()">
+    <span id="YValue">750</span> m
   <div id="graph"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
@@ -140,8 +140,8 @@ def plot_graph5(g,X,Y,start_height,vel):
     plt.plot(x_opt,y_opt,color = "pink",label = "max_range")
     plt.plot(xbc,ybc,"--", label = "bounding",color = "red")
     plt.plot(X, Y, 'y*', markersize=16, label='X,Y')
-    plt.xlim(0,2000)
-    plt.ylim(0,1200)
+    plt.xlim(0,2500)
+    plt.ylim(0,1500)
     plt.legend()
     plt.title("Low/high ball, max range, minimum speed and bounding parabola")
     plt.xlabel("x/m")
