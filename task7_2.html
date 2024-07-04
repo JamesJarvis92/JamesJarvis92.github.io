@@ -44,6 +44,117 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-    
+  <h1>Task 7.1</h1>
+  <label for="angle1">Angle 1:</label>
+  <input type="range" id="angle1" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angle1Value">45</span> degrees
+  <br><br>
+  <label for="angle2">Angle 2:</label>
+  <input type="range" id="angle2" min="0" max="90" value="75" oninput="updateGraph()">
+  <span id="angle2Value">75</span> degrees
+  <br><br>
+  <label for="velocity">Velocity:</label>
+  <input type="range" id="Velocity" min="0" max="20" value="10" oninput="updateGraph()"> 
+  <span id="velocityValue">10</span> degrees
+  <br><br>
+  <label for="gravity">Gravity: </label>
+  <input type="range" id="gravity" min="0" max="20" value="9.81" oninput="updateGraph()">
+  <span id="gravityValue">9.81</span> degrees
+  <br><br>
+  
+  <div id="graph"></div>
+  <script type="text/javascript">
+      async function loadPyodideAndPackages() {
+          window.pyodide = await loadPyodide();
+          await pyodide.loadPackage("numpy");
+          await pyodide.loadPackage("matplotlib");
+          await pyodide.runPythonAsync(`
+
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+
+def time_r(vel,g,start_height,angle,time):
+    angle = np.radians(angle)
+    t_val =np.arange(start = 0,stop = time, step = 0.0001)
+    r_val = []
+    for t in t_val:
+        r1 = (vel**2)*(t**2)
+        r2 = (g)*(t**3)*(vel)*(np.sin(angle))
+        r3 = (0.25)*(g**2)*(t**4)
+        r = np.sqrt(r1-r2+r3)
+        r_val.append(r)
+    if np.degrees(angle)>70.5:
+        t1 = ((3*vel)/(2*g))*np.sin(angle)
+        t2 = ((9*(vel**2))/(4*(g**2)))*(np.sin(angle)**2)
+        t3 = t2 - ((2*(vel**2))/(g**2))
+        tmax = t1 + np.sqrt(t3)
+        tmin = t1 - np.sqrt(t3)
+
+        r1 = (vel**2)*(tmax**2)
+        r2 = (g)*(tmax**3)*(vel)*(np.sin(angle))
+        r3 = (0.25)*(g**2)*(tmax**4)
+        tmaxr = np.sqrt(r1-r2+r3)
+        tmaxco = [tmax,tmaxr]
+
+        r1 = (vel**2)*(tmin**2)
+        r2 = (g)*(tmin**3)*(vel)*(np.sin(angle))
+        r3 = (0.25)*(g**2)*(tmin**4)
+        tminr = np.sqrt(r1-r2+r3)
+        tminco = [tmin,tminr]
+    else:
+        tmaxco = [-1000,-1000]
+        tminco = [-1000,-1000]
+    return t_val,r_val,tmaxco,tminco
+
+
+def plot_graph7_2(vel,g,angle1,angle2):
+    time = 2.5
+    start_height = 0
+    fig, ax = plt.subplots()
+    t_val85, r_val85,maxco85,minco85 = time_r(vel,g,start_height,angle1,time)
+    t_val78, r_val78,maxco78,minco78 = time_r(vel,g,start_height,angle2,time)
+    plt.plot(maxco85[0], maxco85[1], 'x', markersize=16)
+    plt.plot(minco85[0], minco85[1], 'x', markersize=16)
+    plt.annotate("Time = 2.5s  H = 0", xy = (1,25))   
+    plt.xlim(0,2.5)
+    plt.ylim(0,30)
+
+
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
+`);
+      }
+
+      async function updateGraph() {
+          const angle1 = document.getElementById('angle1').value;
+          document.getElementById('angle1Value').innerText = angle1;
+          const angle2 = document.getElementById('angle2').value;
+          document.getElementById('angle2Value').innerText = angle2;
+          const velocity = document.getElementById('velocity').value;
+          document.getElementById('velocityValue').innerText = velocity;
+          const gravity = document.getElementById('gravity').value;
+          document.getElementById('gravityValue').innerText = gravity;
+          
+         
+          const svg_data = await pyodide.runPythonAsync(`
+angle1 = ${angle1}
+angle2 = ${angle2}
+gravity = ${gravity}
+velocity = ${velocity}
+plot_graph7_2(velocity,gravity,angle1,angle2)
+`);
+          document.getElementById('graph').innerHTML = svg_data;
+      }
+
+      loadPyodideAndPackages().then(() => {
+          updateGraph();
+      });
+  </script>  
 </body>
 </html>
