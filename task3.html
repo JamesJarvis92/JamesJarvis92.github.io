@@ -44,6 +44,107 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-    
+  <h1>Task3</h1>
+    <label for="velocity">Velocity:</label>
+    <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
+    <span id="velocityValue">50</span> m/s
+    <br><br>
+    <label for="X">X target:</label>
+    <input type="range" id="X" min="0" max="1000" value="500" oninput="updateGraph()">
+    <span id="XValue">45</span>m
+    <br><br>
+    <label for="Y">Y target:</label>
+    <input type="range" id="Y" min="0" max="500" value="250" oninput="updateGraph()">
+    <span id="YValue">45</span>m
+    <br><br>
+    <label for="gravity">G:</label>
+    <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
+    <span id="gravityValue">9.81</span> N/kg
+    <br><br>
+    <label for="height">Start height:</label>
+    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
+    <span id="heightValue">100</span> m
+  <div id="graph"></div>
+    <script type="text/javascript">
+        async function loadPyodideAndPackages() {
+            window.pyodide = await loadPyodide();
+            await pyodide.loadPackage("numpy");
+            await pyodide.loadPackage("matplotlib");
+            await pyodide.runPythonAsync(`
+
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+
+def low_high_ball(g,X,Y,start_height,vel): 
+    luY = Y-start_height
+    low_u = np.sqrt(g) * np.sqrt(luY+np.sqrt((X**2)+(luY**2)))
+    low_u_anglep1 = luY + np.sqrt((X**2)+(luY**2))
+    low_u_angle = np.degrees(np.arctan(low_u_anglep1/X))
+    low_u_x, low_u_y, low_u_R, low_u_time = analytic_proj_motion(low_u,g,start_height,low_u_angle)
+    a = (g/(2*(vel**2)))*(X**2)
+    b = (-1)*X
+    c = Y - start_height + ((g*(X**2))/(2*(vel**2)))
+    disc = (b**2)-(4*a*c)
+    postheta = np.degrees(np.arctan((-b+np.sqrt(disc))/(2*a)))
+    negtheta = np.degrees(np.arctan((-b-np.sqrt(disc))/(2*a)))
+    low_ball_x, low_ball_y, low_ball_R, low_ball_time = analytic_proj_motion(vel,g,start_height,negtheta)
+    high_ball_x, high_ball_y, high_ball_R, high_ball_time = analytic_proj_motion(vel,g,start_height,postheta)
+    return low_u_x, low_u_y, low_ball_x, low_ball_y, high_ball_x, high_ball_y
+
+def plot_graph3(g,X,Y,start_height,vel):
+    fig, ax = plt.subplots()
+    lux,luy,lbx,lby,hbx,hby = low_high_ball(g,X,Y,start_height,vel)
+    pos = list(lux).index(X)
+    maxy = max(list(hby))
+    plt.plot(lux[:pos],luy[:pos],label = "low_u")
+    plt.plot(lbx[:pos],lby[:pos],color = "black",label = "low_ball" )
+    plt.plot(hbx[:pos],hby[:pos],label = "high_ball")
+    plt.xlim(0,1000)
+    plt.ylim(0,1000)
+    plt.legend()
+    values = 
+    plt.annotate(values,xy = (600,600))
+    plt.annotate("Target",xy = (X,Y))
+    plt.title("High/low ball trajectories through a fixed point")
+    plt.xlabel("x/m")
+    plt.ylabel("y/m")
+
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
+`);
+        }
+
+        async function updateGraph() {
+            const velocity = document.getElementById('velocity').value;
+            document.getElementById('velocityValue').innerText = velocity;
+            const X = document.getElementById('X').value;
+            document.getElementById('XValue').innerText = X;
+            const Y = document.getElementById('Y').value;
+            document.getElementById('YValue').innerText = velocity;
+            const gravity = document.getElementById('gravity').value;
+            document.getElementById('gravityValue').innerText = gravity;
+            const height = document.getElementById('height').value;
+            document.getElementById('heightValue').innerText = height;
+            const svg_data = await pyodide.runPythonAsync(`
+velocity = ${velocity}
+X = ${X}
+Y = ${Y}
+gravity = ${gravity}
+h = ${height}
+plot_graph3(gravity,X,Y,h,velocity)
+`);
+            document.getElementById('graph').innerHTML = svg_data;
+        }
+
+        loadPyodideAndPackages().then(() => {
+            updateGraph();
+        });
+    </script>  
 </body>
 </html>
