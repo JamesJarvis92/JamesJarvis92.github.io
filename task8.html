@@ -44,6 +44,136 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-    
+  <h1>Task 7.2</h1>
+  <label for="angle">Angle:</label>
+  <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angleValue">45</span> degrees
+  <br><br>
+  <label for="C">C:</label>
+  <input type="range" id="angle2" min="0" max="1" value="0.5" oninput="updateGraph()">
+  <span id="CValue">0.5</span> 
+  <br><br>
+  <label for="velocity">Velocity:</label>
+  <input type="range" id="velocity" min="0" max="20" value="10" oninput="updateGraph()"> 
+  <span id="velocityValue">10</span> m/s
+  <br><br>
+  <label for="gravity">Gravity: </label>
+  <input type="range" id="gravity" min="0" max="20" value="9.81" oninput="updateGraph()">
+  <span id="gravityValue">9.81</span> N/kg
+  <br><br>
+  <label for="height">Height: </label>
+  <input type="range" id="height" min="0" max="20" value="10" oninput="updateGraph()">
+  <span id="heightValue">10</span> m
+  <br><br>
+  
+  <div id="graph"></div>
+  <script type="text/javascript">
+      async function loadPyodideAndPackages() {
+          window.pyodide = await loadPyodide();
+          await pyodide.loadPackage("numpy");
+          await pyodide.loadPackage("matplotlib");
+          await pyodide.runPythonAsync(`
+
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+
+def analytic_proj_motion(vel,g,start_height,angle):
+    angle = np.radians(angle)
+    st_part_R = (vel**2)/g
+    sqrt_part_R = ((np.sin(angle))**2)+((2*g*start_height)/(vel**2))
+    sc_part_R = np.sin(angle)*np.cos(angle)
+    R = st_part_R*(sc_part_R + np.cos(angle)*np.sqrt(sqrt_part_R))
+    x_val = np.arange(start = 0,stop = R, step = 0.1)     ### may need to change step based on size of R
+    x_val = list(x_val)
+    y_val = []
+    for i in range(len(x_val)):
+        x = x_val[i]
+        y_first = start_height + (x*np.tan(angle))
+        z = g/(2*(vel**2))
+        y_second = z*(1+(np.tan(angle)**2))*(x**2)
+        y = y_first - y_second
+        y_val.append(y)
+    flight_time = R/(vel*np.cos(angle))
+    return x_val, y_val, R, flight_time
+  
+
+def bounce_ball_analytic(vel,C,angle,h,g):
+    N = 20
+    angle = np.radians(angle)
+    x_vel = np.cos(angle)*vel
+    x_val = []
+    y_val = []
+    rang = 0
+    try:
+        for i in range(N):
+            angle = np.degrees(angle)
+            x, y, R, t = analytic_proj_motion(vel,g,h,angle)
+            h = 0
+            angle = np.radians(angle)
+            x = [x+rang for x in x]
+            y_distch = y[-2]-y[-1]
+            dt = t/len(y)
+            y_vel = y_distch/(dt)
+            new_y_vel = y_vel*C
+            newangle = np.arctan(new_y_vel/x_vel)
+            angle = newangle
+            new_vel = np.sqrt((new_y_vel**2)+(x_vel**2))
+            vel = new_vel
+            x_val+=x
+            y_val+=y
+            rang += R
+    except:
+        pass
+    return x_val,y_val
+
+
+def plot_graph8(vel,C,g,angle,h):
+    x, y = bounce_ball_analytic(vel,C,angle,h,g,N)
+    plt.plot(x,y)
+    plt.xlim(0)
+    plt.ylim(0)
+    plt.title("Bouncy ball with coeffecient of restitution C")
+    plt.xlabel("x/m")
+    plt.ylabel("y/m")
+
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
+`);
+      }
+
+      async function updateGraph() {
+          const angle1 = document.getElementById('angle1').value;
+          document.getElementById('angle1Value').innerText = angle1;
+          const C = document.getElementById('C').value;
+          document.getElementById('CValue').innerText = C;
+          const velocity = document.getElementById('velocity').value;
+          document.getElementById('velocityValue').innerText = velocity;
+          const gravity = document.getElementById('gravity').value;
+          document.getElementById('gravityValue').innerText = gravity;
+          const height = document.getElementById('height').value;
+          document.getElementById('heightValue').innerText = height;
+          
+         
+          const svg_data = await pyodide.runPythonAsync(`
+angle = ${angle}
+C = ${C}
+gravity = ${gravity}
+velocity = ${velocity}
+height = ${height}
+plot_graph8(velocity,C,gravity,angle,height)
+`);
+          document.getElementById('graph').innerHTML = svg_data;
+      }
+
+      loadPyodideAndPackages().then(() => {
+          updateGraph();
+      });
+  </script>  
 </body>
 </html>
