@@ -96,7 +96,6 @@ def plot_graph1(velocity,angle,g,h):
     x, y = proj_motion(velocity, angle, g, h, 0.01)
     ax.plot(x, y)
     ax.set(xlabel='x/m', ylabel='y/m', title='Projectile Motion')
-    ax.grid()
     plt.xlim(0,1000)
     plt.ylim(0,500)
 
