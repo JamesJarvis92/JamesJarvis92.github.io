@@ -79,7 +79,7 @@ def analytic_proj_motion(vel,g,start_height,angle):
     sqrt_part_R = ((np.sin(angle))**2)+((2*g*start_height)/(vel**2))
     sc_part_R = np.sin(angle)*np.cos(angle)
     R = st_part_R*(sc_part_R + np.cos(angle)*np.sqrt(sqrt_part_R))
-    x_val = np.arange(start = 0,stop = R, step = 0.1)     ### may need to change step based on size of R
+    x_val = np.arange(start = 0,stop = R, step = 0.1)     
     x_val = list(x_val)
     y_val = []
     for i in range(len(x_val)):
