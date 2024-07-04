@@ -51,11 +51,11 @@
     <br><br>
     <label for="X">X target:</label>
     <input type="range" id="X" min="0" max="1000" value="500" oninput="updateGraph()">
-    <span id="XValue">45</span>m
+    <span id="XValue">500</span>m
     <br><br>
     <label for="Y">Y target:</label>
     <input type="range" id="Y" min="0" max="500" value="250" oninput="updateGraph()">
-    <span id="YValue">45</span>m
+    <span id="YValue">250</span>m
     <br><br>
     <label for="gravity">G:</label>
     <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
@@ -75,6 +75,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import io
+
 def analytic_proj_motion(vel,g,start_height,angle):
     angle = np.radians(angle)
     st_part_R = (vel**2)/g
