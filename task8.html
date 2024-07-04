@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 8....</h1>
+  <h1>Task 8.....</h1>
   <label for="angle">Angle:</label>
   <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
   <span id="angleValue">45</span> degrees
@@ -147,8 +147,8 @@ def plot_graph8(vel,C,g,angle,h):
 `);
       }
       async function updateGraph() {
-          const angle1 = document.getElementById('angle').value;
-          document.getElementById('angleValue').innerText = angle1;
+          const angle = document.getElementById('angle').value;
+          document.getElementById('angleValue').innerText = angle;
           const C = document.getElementById('C').value;
           document.getElementById('CValue').innerText = C;
           const velocity = document.getElementById('velocity').value;
