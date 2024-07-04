@@ -75,6 +75,31 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import io
+def analytic_proj_motion(vel,g,start_height,angle):
+    angle = np.radians(angle)
+    st_part_R = (vel**2)/g
+    sqrt_part_R = ((np.sin(angle))**2)+((2*g*start_height)/(vel**2))
+    sc_part_R = np.sin(angle)*np.cos(angle)
+    R = st_part_R*(sc_part_R + np.cos(angle)*np.sqrt(sqrt_part_R))
+    x_val = np.arange(start = 0,stop = R, step = 0.1)     ### may need to change step based on size of R
+    x_val = list(x_val)
+    y_val = []
+    for i in range(len(x_val)):
+        x = x_val[i]
+        y_first = start_height + (x*np.tan(angle))
+        z = g/(2*(vel**2))
+        y_second = z*(1+(np.tan(angle)**2))*(x**2)
+        y = y_first - y_second
+        y_val.append(y)
+    flight_time = R/(vel*np.cos(angle))
+    return x_val, y_val, R, flight_time
+
+
+def apogee(vel,g,start_height,angle):
+    angle = np.radians(angle)
+    x_apogee = ((vel**2)/g)*np.sin(angle)*np.cos(angle)
+    y_apogee = ((vel*vel)/(2*g))*np.sin(angle)*np.sin(angle)+start_height
+    return x_apogee,y_apogee
 
 def low_high_ball(g,X,Y,start_height,vel): 
     luY = Y-start_height
