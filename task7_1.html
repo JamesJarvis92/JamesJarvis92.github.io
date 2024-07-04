@@ -44,6 +44,132 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-    
+  <h1>Task 6</h1>
+  <label for="angle1">Angle 1:</label>
+  <input type="range" id="angle1" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angle1Value">45</span> degrees
+  <br><br>
+  <label for="angle2">Angle 2:</label>
+  <input type="range" id="angle2" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angle2Value">45</span> degrees
+  <br><br>
+  <label for="angle3">Angle 3:</label>
+  <input type="range" id="angle3" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angle3Value">45</span> degrees
+  <br><br>
+  <label for="angle4">Angle 4:</label>
+  <input type="range" id="angle4" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angle4Value">45</span> degrees
+  <br><br>
+  <label for="angle5">Angle 5:</label>
+  <input type="range" id="angle5" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angle5Value">45</span> degrees
+  <br><br>
+  <label for="angle6">Angle 6:</label>
+  <input type="range" id="angle6" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angle6Value">45</span> degrees
+  <br><br>
+  
+  
+  <div id="graph"></div>
+  <script type="text/javascript">
+      async function loadPyodideAndPackages() {
+          window.pyodide = await loadPyodide();
+          await pyodide.loadPackage("numpy");
+          await pyodide.loadPackage("matplotlib");
+          await pyodide.runPythonAsync(`
+
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+
+def neg_proj_motion(vel,g,start_height,angle):
+    angle = np.radians(angle)
+    st_part_R = (vel**2)/g
+    sqrt_part_R = ((np.sin(angle))**2)+((2*g*start_height)/(vel**2))
+    sc_part_R = np.sin(angle)*np.cos(angle)
+    R = st_part_R*(sc_part_R + np.cos(angle)*np.sqrt(sqrt_part_R))
+    Z = R*2
+    x_val = np.arange(start = 0,stop = Z, step = 0.1)
+    x_val = list(x_val)
+    y_val = []
+    ftime = []
+    for i in range(len(x_val)):
+        x = x_val[i]
+        y_first = start_height + (x*np.tan(angle))
+        z = g/(2*(vel**2))
+        y_second = z*(1+(np.tan(angle)**2))*(x**2)
+        y = y_first - y_second
+        y_val.append(y)
+    flight_time = R/(vel*np.cos(angle))
+    return x_val, y_val, R, flight_time
+
+def plot_graph7_1(angle1,angle2,angle3,angle4,angle5,angle6):
+    vel = 10
+    start_height = 0
+    g = 9.81
+    fig, ax = plt.subplots()
+    x_val30,y_val30,R,T30 = neg_proj_motion(vel,g,start_height,angle1)
+    x_val45,y_val45,R,T45 = neg_proj_motion(vel,g,start_height,angle2)
+    x_val60,y_val60,R,T60 = neg_proj_motion(vel,g,start_height,angle3)
+    x_val70_5,y_val70_5,R,T70_5 = neg_proj_motion(vel,g,start_height,angle4)
+    x_val78,y_val78,R,T78 = neg_proj_motion(vel,g,start_height,angle5)
+    x_val85,y_val85,R,T85 = neg_proj_motion(vel,g,start_height,angle6)
+    values = "Vel = " + str(vel) +" H = " + str(start_height) + " G = " + str(g) 
+    plt.annotate(values,xy = (15,4))
+    plt.plot(x_val30,y_val30,label = "angle1")
+    plt.plot(x_val45,y_val45,label = "angle2")
+    plt.plot(x_val60,y_val60,label = "angle3")
+    plt.plot(x_val70_5,y_val70_5,label = "angle4")
+    plt.plot(x_val78,y_val78,label = "angle5")
+    plt.plot(x_val85,y_val85,label = "angle6")
+    plt.legend()
+    plt.ylim(-5)
+    plt.xlim(0)
+    plt.title("Projectiles not stopping at h=0")
+    plt.xlabel("x/m")
+    plt.ylabel("y/m")
+  
+  
+  # Convert plot to SVG
+  img_data = io.StringIO()
+  fig.savefig(img_data, format='svg')
+  img_data.seek(0)
+  svg_data = img_data.getvalue()
+  plt.close(fig)
+  return svg_data
+`);
+      }
+
+      async function updateGraph() {
+          const angle1 = document.getElementById('angle1').value;
+          document.getElementById('angle1Value').innerText = angle1;
+          const angle2 = document.getElementById('angle2').value;
+          document.getElementById('angle2Value').innerText = angle2;
+          const angle3 = document.getElementById('angle3').value;
+          document.getElementById('angle3Value').innerText = angle3;
+          const angle4 = document.getElementById('angle4').value;
+          document.getElementById('angle4Value').innerText = angle4;
+          const angle5 = document.getElementById('angle5').value;
+          document.getElementById('angle5Value').innerText = angle5;
+          const angle6 = document.getElementById('angle6').value;
+          document.getElementById('angle6Value').innerText = angle6;
+         
+          const svg_data = await pyodide.runPythonAsync(`
+angle1 = ${angle1}
+angle2 = ${angle2}
+angle3 = ${angle3}
+angle4 = ${angle4}
+angle5 = ${angle5}
+angle6 = ${angle6}
+plot_graph7_1(angle1,angle2,angle3,angle4,angle5,angle5)
+`);
+          document.getElementById('graph').innerHTML = svg_data;
+      }
+
+      loadPyodideAndPackages().then(() => {
+          updateGraph();
+      });
+  </script>  
 </body>
 </html>
