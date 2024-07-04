@@ -44,14 +44,10 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 5.</h1>
+  <h1>Task 5</h1>
     <label for="velocity">Velocity:</label>
-    <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
+    <input type="range" id="velocity" min="10" max="250" value="125" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
-    <br><br>
-    <label for="angle">Angle:</label>
-    <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
-    <span id="angleValue">45</span> degrees
     <br><br>
     <label for="gravity">G:</label>
     <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
@@ -132,7 +128,8 @@ def optimum_angle(vel,angle,start_height,g):
     x_opt, y_opt, R_opt, t_opt = analytic_proj_motion(vel,g,start_height,amax)
     return x_org, y_org, x_opt, y_opt,amax
 
-def plot_graph5(g,X,Y,start_height,vel,angle):
+def plot_graph5(g,X,Y,start_height,vel):
+    angle = 45
     fig, ax = plt.subplots()
     lux,luy,lbx,lby,hbx,hby = low_high_ball(g,X,Y,start_height,vel)
     x_org, y_org, x_opt, y_opt, a_max = optimum_angle(vel,angle,start_height,g)
@@ -142,7 +139,7 @@ def plot_graph5(g,X,Y,start_height,vel,angle):
     plt.plot(hbx,hby,label = "high_ball")
     plt.plot(x_opt,y_opt,color = "pink",label = "max_range")
     plt.plot(xbc,ybc,"--", label = "bounding",color = "red")
-    plt.plot(X, Y, 'y*', markersize=16, label='X,Y (1000,300)')
+    plt.plot(X, Y, 'y*', markersize=16, label='X,Y')
     plt.xlim(0)
     plt.ylim(0)
     plt.legend()
@@ -163,8 +160,6 @@ def plot_graph5(g,X,Y,start_height,vel,angle):
         async function updateGraph() {
             const velocity = document.getElementById('velocity').value;
             document.getElementById('velocityValue').innerText = velocity;
-            const angle = document.getElementById('angle').value;
-            document.getElementById('angleValue').innerText = angle;
             const gravity = document.getElementById('gravity').value;
             document.getElementById('gravityValue').innerText = gravity;
             const height = document.getElementById('height').value;
@@ -175,12 +170,11 @@ def plot_graph5(g,X,Y,start_height,vel,angle):
             document.getElementById('YValue').innerText = Y;
             const svg_data = await pyodide.runPythonAsync(`
 velocity = ${velocity}
-angle = ${angle}
 gravity = ${gravity}
 h = ${height}
 X = ${X}
 Y = ${Y}
-plot_graph5(gravity,X,Y,h,velocity,angle)
+plot_graph5(gravity,X,Y,h,velocity)
 `);
             document.getElementById('graph').innerHTML = svg_data;
         }
