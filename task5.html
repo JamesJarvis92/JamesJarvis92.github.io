@@ -46,24 +46,24 @@
   </a>
   <h1>Task 5</h1>
     <label for="velocity">Velocity:</label>
-    <input type="range" id="velocity" min="10" max="250" value="125" oninput="updateGraph()">
-    <span id="velocityValue">50</span> m/s
+    <input type="range" id="velocity" min="10" max="150" value="75" oninput="updateGraph()">
+    <span id="velocityValue">75</span> m/s
     <br><br>
     <label for="gravity">G:</label>
     <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
     <span id="gravityValue">9.81</span> N/kg
     <br><br>
     <label for="height">Start height:</label>
-    <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
-    <span id="heightValue">100</span> m
+    <input type="range" id="height" min="0" max="300" value="150" oninput="updateGraph()">
+    <span id="heightValue">150</span> m
     <br><br>
     <label for="X">X:</label>
     <input type="range" id="X" min="0" max="1000" value="500" oninput="updateGraph()">
-    <span id="XValue">100</span> m
+    <span id="XValue">500</span> m
     <br><br>
     <label for="Y">Y:</label>
-    <input type="range" id="Y" min="0" max="200" value="100" oninput="updateGraph()">
-    <span id="YValue">100</span> m
+    <input type="range" id="Y" min="0" max="400" value="200" oninput="updateGraph()">
+    <span id="YValue">200</span> m
   <div id="graph"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
@@ -140,8 +140,8 @@ def plot_graph5(g,X,Y,start_height,vel):
     plt.plot(x_opt,y_opt,color = "pink",label = "max_range")
     plt.plot(xbc,ybc,"--", label = "bounding",color = "red")
     plt.plot(X, Y, 'y*', markersize=16, label='X,Y')
-    plt.xlim(0)
-    plt.ylim(0)
+    plt.xlim(0,2000)
+    plt.ylim(0,1200)
     plt.legend()
     plt.title("Low/high ball, max range, minimum speed and bounding parabola")
     plt.xlabel("x/m")
