@@ -107,7 +107,7 @@ def bounce_ball_analytic(vel,C,angle,h,g):
     try:
         for i in range(N):
             angle = np.degrees(angle)
-            x, y, R, t = analytic_proj_motion(vel,g,h,angle)
+            x, y, range, t = analytic_proj_motion(vel,g,h,angle)
             h = 0
             angle = np.radians(angle)
             x = [x+rang for x in x]
@@ -121,7 +121,7 @@ def bounce_ball_analytic(vel,C,angle,h,g):
             vel = new_vel
             x_val+=x
             y_val+=y
-            rang += R
+            rang += range
     except:
         pass
     return x_val,y_val
