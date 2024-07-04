@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 4.</h1>
+  <h1>Task 4..</h1>
     <label for="velocity">Velocity:</label>
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
@@ -103,11 +103,11 @@ def plot_graph4(vel,angle,start_height,g):
     x_org, y_org, x_opt, y_opt, a_max = optimum_angle(vel,angle,start_height,g)
     plt.plot(x_org,y_org, color = "black", label = "Original flight")
     plt.plot(x_opt,y_opt, color = "blue", label = "Max R")
-    plt.ylim(0,200)
-    plt.xlim(0,200)
+    plt.ylim(0,1000)
+    plt.xlim(0,1000)
     plt.legend()
     values = "Angle of optimum range = " + str(a_max.round(2))
-    plt.annotate(values,xy = (100,100))
+    plt.annotate(values,xy = (500,500))
     plt.title("Normal trajectory vs max range trajectory")
     plt.xlabel("x/m")
     plt.ylabel("y/m")
