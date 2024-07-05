@@ -64,7 +64,7 @@
     <label for="height">Start height:</label>
     <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
     <span id="heightValue">100</span> m
-  <div id="graph" style="position:fixed; top:150px; right:500px;"></div>
+  <div id="graph" style="position:fixed; top:150px; right:450px;"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
             window.pyodide = await loadPyodide();
@@ -169,6 +169,6 @@ plot_graph3(gravity,X,Y,h,velocity)
         });
     </script>
 <p>This graph shows the highest and lowest <br>angle trajectory a projectile could take to reach <br>its target position. It also shows the trajectory <br>of the lowest speed a projectile could take to <br>reach the same point.</p>    
-<p>If there is no high/low ball trajectories <br>the projectile cannot get to the target <br>coordinates given its current parameters. <br>Try increasing velocity or moving the target closer <br>to the origin</p>  
+<p>If there is no high/low ball trajectories <br>the projectile cannot get to the target <br>coordinates given its current parameters. <br>Try increasing velocity or moving the target <br>closer to the origin</p>  
 </body>
 </html>

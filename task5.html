@@ -46,8 +46,8 @@
   </a>
   <h1>Task 5</h1>
     <label for="velocity">Velocity:</label>
-    <input type="range" id="velocity" min="10" max="150" value="75" oninput="updateGraph()">
-    <span id="velocityValue">75</span> m/s
+    <input type="range" id="velocity" min="10" max="150" value="100" oninput="updateGraph()">
+    <span id="velocityValue">100</span> m/s
     <br><br>
     <label for="gravity">G:</label>
     <input type="range" id="gravity" min="1" max="20" value="9.81" oninput="updateGraph()">
@@ -58,13 +58,13 @@
     <span id="heightValue">150</span> m
     <br><br>
     <label for="X">X:</label>
-    <input type="range" id="X" min="0" max="2500" value="1250" oninput="updateGraph()">
-    <span id="XValue">1250</span> m
+    <input type="range" id="X" min="0" max="2500" value="500" oninput="updateGraph()">
+    <span id="XValue">500</span> m
     <br><br>
     <label for="Y">Y:</label>
-    <input type="range" id="Y" min="0" max="1500" value="750" oninput="updateGraph()">
-    <span id="YValue">750</span> m
-  <div id="graph" style="position:fixed; top:150px; right:500px;"></div>
+    <input type="range" id="Y" min="0" max="1500" value="500" oninput="updateGraph()">
+    <span id="YValue">500</span> m
+  <div id="graph" style="position:fixed; top:150px; right:450px;"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
             window.pyodide = await loadPyodide();
