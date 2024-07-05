@@ -11,9 +11,12 @@ h1 {
 }
 
 .button {
-  transition-duration: 0.2s;
-  width: 25px;
-  height: 15px;
+  transition-duration: 0.4s;
+  padding: 25px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
 }
 
 .button:hover {
