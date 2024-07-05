@@ -102,6 +102,8 @@ def find_k(dc,ad,A,m):
     return k
 
 def ar_proj_motion(angle,vel,h,g,dc,ad,A,m):
+    if vel == 0:
+      return [],[]
     x_coord = []
     y_coord = []
     x_pos = 0
