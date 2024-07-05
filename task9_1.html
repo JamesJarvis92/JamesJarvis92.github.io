@@ -44,6 +44,155 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
+  <h1>Task 8 </h1>
+  <label for="angle">Angle: </label>
+  <input type="range" id="angle" min="0" max="90" value="45" oninput="updateGraph()">
+  <span id="angleValue">45</span> degrees
+  <br><br>
+  <label for="dc">dc: </label>
+  <input type="range" id="dc" min="0" max="1" value="0.5" step = "0.05" oninput="updateGraph()">
+  <span id="dcValue">0.5</span> 
+  <br><br>
+  <label for="velocity">Velocity:</label>
+  <input type="range" id="velocity" min="0" max="20" value="10" oninput="updateGraph()"> 
+  <span id="velocityValue">10</span> m/s
+  <br><br>
+  <label for="gravity">Gravity: </label>
+  <input type="range" id="gravity" min="0" max="20" value="9.81" oninput="updateGraph()">
+  <span id="gravityValue">9.81</span> N/kg
+  <br><br>
+  <label for="height">Height: </label>
+  <input type="range" id="height" min="0" max="20" value="10" oninput="updateGraph()">
+  <span id="heightValue">10</span> m
+  <br><br>
+  <label for="mass">mass: </label>
+  <input type="range" id="mass" min="0" max="20" value="10" oninput="updateGraph()">
+  <span id="massValue">10</span> kg
+  <br><br>
+  <label for="area">Area: </label>
+  <input type="range" id="area" min="0" max="20" value="10" oninput="updateGraph()">
+  <span id="areaValue">20</span> m^2
+  <br><br>
+  <div id="graph" style="position:fixed; top:150px; right:500px;"></div>
+  <script type="text/javascript">
+      async function loadPyodideAndPackages() {
+          window.pyodide = await loadPyodide();
+          await pyodide.loadPackage("numpy");
+          await pyodide.loadPackage("matplotlib");
+          await pyodide.runPythonAsync(`
+
+import matplotlib.pyplot as plt
+import numpy as np
+import io
+
+def air_density(alt):  ## alt in metres
+    if alt>25000:
+        T = -131.21 + (0.00299*alt)
+        p = 2.488 * (((T+273.1)/216.6)**(-11.388))
+    elif alt>11000:
+        T = -56.46
+        p = 22.65 * np.e**(1.73-(0.000157*alt))
+    else:
+        T = 15.04 - (0.00649*alt)
+        p = 101.29 * (((T+273.1)/288.08)**5.256)
+    kgperm = p/(0.2869*(T+273.1))
+    return kgperm
+
+def find_g(g,R,h):  # earth rad = 6371000m or give height and rad in same units
+    return (g*(1-((2*h)/R)))
+
+def find_k(dc,ad,A,m):
+    k = (0.5*dc*ad*A)/(m)
+    return k
+
+def ar_proj_motion(angle,vel,h,g,dc,ad,A,m):
+    x_coord = []
+    y_coord = []
+    x_pos = 0
+    y_pos = h
+    dt = 0.01
+    angle = np.radians(angle)
+    x_vel = np.sin(angle)*vel
+    y_vel = np.cos(angle)*vel
+    landed = False
+    while landed == False:
+        k = find_k(dc,ad,A,m)
+        x_coord.append(x_pos)
+        y_coord.append(y_pos)
+        a_xp1 = x_vel/vel
+        a_xp2 = k*(vel**2)
+        a_x = -(a_xp1*a_xp2)
+        a_yp1 = -(g)
+        a_yp2 = y_vel/vel
+        a_yp3 = a_xp2
+        a_y = a_yp1-(a_yp2*a_yp3)
+        x_pos += x_vel*dt + (0.5*a_x*(dt**2))
+        y_pos += y_vel*dt + (0.5*a_y*(dt**2))
+        x_vel += a_x*dt
+        y_vel += a_y*dt
+        vel = np.sqrt((x_vel**2)+(y_vel**2))
+        ad = air_density(y_pos)
+        g = find_g(9.81,6371000,y_pos)
+        #print(x_vel,y_vel,vel)
+        if y_pos<0:
+            landed = True
+        
+    return x_coord, y_coord
+
+def plot_graph9_1(angle,vel,h,dc,A,m):
+    fig, ax = plt.subplots()
+    g = find_g(9.81,6371000,h)
+    ad = air_density(h)
+    x_val,y_val = ar_proj_motion(angle,vel,h,g,dc,ad,A,m)
+    plt.plot(x_val,y_val,label = "ar")
+    plt.legend()
+    plt.xlim(0)
+    plt.ylim(0)
+    plt.title("Model incorporating drag, change in g and air density with altitude")
+    plt.xlabel("x/m")
+    plt.ylabel("y/m")
     
+    # Convert plot to SVG
+    img_data = io.StringIO()
+    fig.savefig(img_data, format='svg')
+    img_data.seek(0)
+    svg_data = img_data.getvalue()
+    plt.close(fig)
+    return svg_data
+`);
+      }
+      async function updateGraph() {
+          const angle = document.getElementById('angle').value;
+          document.getElementById('angleValue').innerText = angle;
+          const dc = document.getElementById('dc').value;
+          document.getElementById('dcValue').innerText = dc;
+          const velocity = document.getElementById('velocity').value;
+          document.getElementById('velocityValue').innerText = velocity;
+          const gravity = document.getElementById('gravity').value;
+          document.getElementById('gravityValue').innerText = gravity;
+          const height = document.getElementById('height').value;
+          document.getElementById('heightValue').innerText = height;
+          const mass = document.getElementById('mass').value;
+          document.getElementById('massValue').innerText = mass;
+          const area = document.getElementById('area').value;
+          document.getElementById('areaValue').innerText = area;
+         
+          const svg_data = await pyodide.runPythonAsync(`
+angle = ${angle}
+dc = ${dc}
+gravity = ${gravity}
+velocity = ${velocity}
+height = ${height}
+m = ${mass}
+A = ${area}
+plot_graph9_2(angle,velocity,height,dc,A,m)
+`);
+          document.getElementById('graph').innerHTML = svg_data;
+      }
+
+      loadPyodideAndPackages().then(() => {
+          updateGraph();
+      });
+  </script>    
 </body>
 </html>
