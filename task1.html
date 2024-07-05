@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button button class="button" role="button">Task 9.2</button>
   </a>
-    <h1>Task 1 involves modelling a projectile using timesteps</h1>
+    <h1>Task 1</h1>
     <label for="velocity">Velocity:</label>
     <input type="range" id="velocity" min="10" max="100" value="50" oninput="updateGraph()">
     <span id="velocityValue">50</span> m/s
@@ -60,7 +60,7 @@
     <label for="height">Start height:</label>
     <input type="range" id="height" min="0" max="200" value="100" oninput="updateGraph()">
     <span id="heightValue">100</span> m
-    <div id="graph" style="position:fixed; top:150px; right:500px;"></div>
+    <div id="graph" style="position:fixed; top:150px; right:450px;"></div>
     <script type="text/javascript">
         async function loadPyodideAndPackages() {
             window.pyodide = await loadPyodide();
