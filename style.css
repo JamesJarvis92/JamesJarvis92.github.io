@@ -15,6 +15,6 @@ h1 {
 }
 
 .button:hover {
-  background-color: #04AA6D; /* Green */
-  color: white;
+  background-color: #ffffff; /* Green */
+  color: rgb(0, 0, 0);
 }
