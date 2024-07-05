@@ -67,7 +67,7 @@
   <br><br>
   <label for="percent">Visible Percent: </label>
   <input type="range" id="percent" min="0" max="100" value="100" oninput="updateGraph()">
-  <span id="percentValue">50</span> m
+  <span id="percentValue">100</span>%
   <br><br>
   <div id="graph" style="position:fixed; top:150px; right:500px;"></div>
   <script type="text/javascript">
@@ -134,7 +134,7 @@ def bounce_ball_analytic(vel,C,angle,h,g):
 def plot_graph8(vel,C,g,angle,h,percent):
     fig, ax = plt.subplots()
     x, y = bounce_ball_analytic(vel,C,angle,h,g)
-    z = (len(x)*(percent/100)).round(0)
+    z = int(len(x)*(percent/100))
     plt.plot(x[:z],y[:z])
     plt.xlim(0,30)
     plt.ylim(0,30)
