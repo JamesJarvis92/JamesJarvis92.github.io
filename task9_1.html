@@ -54,12 +54,8 @@
   <span id="dcValue">0.5</span> 
   <br><br>
   <label for="velocity">Velocity:</label>
-  <input type="range" id="velocity" min="0" max="20" value="10" oninput="updateGraph()"> 
-  <span id="velocityValue">10</span> m/s
-  <br><br>
-  <label for="gravity">Gravity: </label>
-  <input type="range" id="gravity" min="0" max="20" value="9.81" oninput="updateGraph()">
-  <span id="gravityValue">9.81</span> N/kg
+  <input type="range" id="velocity" min="0" max="50" value="25" oninput="updateGraph()"> 
+  <span id="velocityValue">25</span> m/s
   <br><br>
   <label for="height">Height: </label>
   <input type="range" id="height" min="0" max="20" value="10" oninput="updateGraph()">
@@ -146,8 +142,8 @@ def plot_graph9_1(angle,vel,h,dc,A,m):
     x_val,y_val = ar_proj_motion(angle,vel,h,g,dc,ad,A,m)
     plt.plot(x_val,y_val,label = "ar")
     plt.legend()
-    plt.xlim(0)
-    plt.ylim(0)
+    plt.xlim(0,100)
+    plt.ylim(0,100)
     plt.title("Model incorporating drag, change in g and air density with altitude")
     plt.xlabel("x/m")
     plt.ylabel("y/m")
@@ -168,8 +164,6 @@ def plot_graph9_1(angle,vel,h,dc,A,m):
           document.getElementById('dcValue').innerText = dc;
           const velocity = document.getElementById('velocity').value;
           document.getElementById('velocityValue').innerText = velocity;
-          const gravity = document.getElementById('gravity').value;
-          document.getElementById('gravityValue').innerText = gravity;
           const height = document.getElementById('height').value;
           document.getElementById('heightValue').innerText = height;
           const mass = document.getElementById('mass').value;
@@ -180,7 +174,6 @@ def plot_graph9_1(angle,vel,h,dc,A,m):
           const svg_data = await pyodide.runPythonAsync(`
 angle = ${angle}
 dc = ${dc}
-gravity = ${gravity}
 velocity = ${velocity}
 height = ${height}
 m = ${mass}
