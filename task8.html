@@ -65,6 +65,10 @@
   <input type="range" id="height" min="0" max="20" value="10" oninput="updateGraph()">
   <span id="heightValue">10</span> m
   <br><br>
+  <label for="percent">Visible Percent: </label>
+  <input type="range" id="percent" min="0" max="100" value="100" oninput="updateGraph()">
+  <span id="percentValue">50</span> m
+  <br><br>
   <div id="graph" style="position:fixed; top:150px; right:500px;"></div>
   <script type="text/javascript">
       async function loadPyodideAndPackages() {
@@ -127,10 +131,11 @@ def bounce_ball_analytic(vel,C,angle,h,g):
     return x_val,y_val
 
 
-def plot_graph8(vel,C,g,angle,h):
+def plot_graph8(vel,C,g,angle,h,percent):
     fig, ax = plt.subplots()
     x, y = bounce_ball_analytic(vel,C,angle,h,g)
-    plt.plot(x,y)
+    z = (len(x)*(percent/100)).round(0)
+    plt.plot(x[:z],y[:z])
     plt.xlim(0,30)
     plt.ylim(0,30)
     plt.title("Bouncy ball with coeffecient of restitution C")
@@ -157,6 +162,8 @@ def plot_graph8(vel,C,g,angle,h):
           document.getElementById('gravityValue').innerText = gravity;
           const height = document.getElementById('height').value;
           document.getElementById('heightValue').innerText = height;
+          const percent = document.getElementById('percent').value;
+          document.getElementById('percentValue').innerText = percent;
           
          
           const svg_data = await pyodide.runPythonAsync(`
@@ -165,7 +172,8 @@ C = ${C}
 gravity = ${gravity}
 velocity = ${velocity}
 height = ${height}
-plot_graph8(velocity,C,gravity,angle,height)
+percent = ${percent}
+plot_graph8(velocity,C,gravity,angle,height,percent)
 `);
           document.getElementById('graph').innerHTML = svg_data;
       }
@@ -174,5 +182,6 @@ plot_graph8(velocity,C,gravity,angle,height)
           updateGraph();
       });
   </script>  
+  <p>This graph shows the trajectory of a bouncy ball with coefficient of resitution C.</p>
 </body>
 </html>
