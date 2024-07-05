@@ -11,9 +11,9 @@ h1 {
 }
 
 .button {
-  transition-duration: 0.4s;
-  width: 100px;
-  height: 50px;
+  transition-duration: 0.2s;
+  width: 25px;
+  height: 15px;
 }
 
 .button:hover {
