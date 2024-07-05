@@ -44,7 +44,7 @@
   <a href="task9_2.html">
     <button>Task 9.2</button>
   </a>
-  <h1>Task 7.2</h1>
+  <h1>Task 7.2.</h1>
   <label for="angle1">Angle 1:</label>
   <input type="range" id="angle1" min="0" max="90" value="45" oninput="updateGraph()">
   <span id="angle1Value">45</span> degrees
@@ -109,7 +109,7 @@ def time_r(vel,g,start_height,angle,time):
 
 
 def plot_graph7_2(vel,g,angle1,angle2):
-    time = 2.5
+    time = 5
     start_height = 0
     fig, ax = plt.subplots()
     t_val85, r_val85,maxco85,minco85 = time_r(vel,g,start_height,angle1,time)
@@ -121,7 +121,7 @@ def plot_graph7_2(vel,g,angle1,angle2):
     plt.plot(t_val85,r_val85, color = "black")
     plt.plot(t_val78,r_val78, color = "blue")
     plt.annotate("Time = 2.5s  H = 0", xy = (1,25))   
-    plt.xlim(0,2.5)
+    plt.xlim(0,5)
     plt.ylim(0,30)
     plt.title("Range against time with max/min for angle>70.5")
     plt.xlabel("t/s")
